@@ -6,6 +6,10 @@ USER root
 # Install openssl for certificate generation
 RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
+# Copy and set up entrypoint wrapper
+COPY fix-permissions.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/fix-permissions.sh
+
 # Create SSL directory
 RUN mkdir -p /etc/rabbitmq/ssl && chown -R rabbitmq:rabbitmq /etc/rabbitmq/ssl
 
@@ -35,4 +39,6 @@ RUN chown rabbitmq:rabbitmq /etc/rabbitmq/rabbitmq.conf
 # Expose AMQP, AMQPS, and Management ports
 EXPOSE 5672 5671 15672
 
-USER rabbitmq:rabbitmq
+# Use custom entrypoint to fix permissions
+ENTRYPOINT ["/usr/local/bin/fix-permissions.sh"]
+CMD ["rabbitmq-server"]
