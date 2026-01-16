@@ -32,10 +32,6 @@ ENV RABBITMQ_NODENAME=rabbit@localhost
 
 RUN chown rabbitmq:rabbitmq /etc/rabbitmq/rabbitmq.conf
 
-# Fix RabbitMQ data directory permissions
-RUN chown -R rabbitmq:rabbitmq /var/lib/rabbitmq && \
-    chmod 750 /var/lib/rabbitmq
-
 # Expose AMQP, AMQPS, and Management ports
 EXPOSE 5672 5671 15672
 
